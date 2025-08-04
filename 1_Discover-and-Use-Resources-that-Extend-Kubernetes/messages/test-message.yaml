@@ -1,0 +1,6 @@
+apiVersion: example.com/v1
+kind: Message
+metadata:
+  name: hello
+spec:
+  text: "Hello, World!"

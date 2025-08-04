@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-operator
+  template:
+    metadata:
+      labels:
+        app: message-operator
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: operator
+          image: bitnami/kubectl:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              while true; do
+                # Loop through all custom Message resources
+                for m in $(kubectl get messages -o jsonpath='{.items[*].metadata.name}'); do
+                  text=$(kubectl get message $m -o jsonpath='{.spec.text}')
+                  # Create or update a ConfigMap with the message text
+                  kubectl create configmap message-$m \
+                    --from-literal=text="$text" \
+                    --dry-run=client -o yaml | kubectl apply -f -
+                done
+                sleep 10
+              done

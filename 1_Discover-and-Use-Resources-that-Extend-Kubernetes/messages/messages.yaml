@@ -1,0 +1,88 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: messages.example.com
+spec:
+  group: example.com
+  scope: Namespaced
+  names:
+    plural: messages
+    singular: message
+    kind: Message
+    shortNames:
+      - msg
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: "The message to store"
+              required:
+                - text
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: message-operator-role
+rules:
+  - apiGroups: ["example.com"]
+    resources: ["messages"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["create", "get", "list", "update", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: message-operator-rolebinding
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: message-operator-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: message-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-operator
+  template:
+    metadata:
+      labels:
+        app: message-operator
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: operator
+          image: bitnami/kubectl:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              while true; do
+                # Loop through all custom Message resources
+                for m in $(kubectl get messages -o jsonpath='{.items[*].metadata.name}'); do
+                  text=$(kubectl get message $m -o jsonpath='{.spec.text}')
+                  # Create or update a ConfigMap with the message text
+                  kubectl create configmap message-$m \
+                    --from-literal=text="$text" \
+                    --dry-run=client -o yaml | kubectl apply -f -
+                done
+                sleep 10
+              done

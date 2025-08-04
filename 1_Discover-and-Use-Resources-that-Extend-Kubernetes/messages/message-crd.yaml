@@ -1,0 +1,29 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: messages.example.com
+spec:
+  group: example.com
+  scope: Namespaced
+  names:
+    plural: messages
+    singular: message
+    kind: Message
+    shortNames:
+      - msg
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: "The message to store"
+              required:
+                - text
