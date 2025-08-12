@@ -1,0 +1,8 @@
+# GitHub
+https://github.com/pluralsight-cloud/application-environment-configuration-security-ckad/
+
+# Documentation
+https://kubernetes.io/docs/home/
+
+# Kubernetes Admission Controllers List
+https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#what-does-each-admission-controller-do
