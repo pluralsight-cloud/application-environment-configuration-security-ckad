@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: runner-pod
+  namespace: backend
+spec:
+  containers:
+    - name: runner
+      image: busybox:1.36
+      command: ["/bin/sh","-c","/scripts/start.sh"]
+  restartPolicy: Never
