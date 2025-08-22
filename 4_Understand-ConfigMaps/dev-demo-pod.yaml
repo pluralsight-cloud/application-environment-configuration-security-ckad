@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dev-demo-pod
+spec:
+  restartPolicy: Never
+  containers:
+    - name: app
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          echo "app_name=$APP_NAME"
+          echo "log_level=$LOG_LEVEL"
+          echo "feature_flag=$FEATURE_FLAG"
+          echo "timeout=$TIMEOUT"
