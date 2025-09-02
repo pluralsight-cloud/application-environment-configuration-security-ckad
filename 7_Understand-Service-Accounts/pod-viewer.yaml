@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-viewer
+  namespace: ops
+spec:
+  restartPolicy: Never
+  containers:
+    - name: checker
+      image: registry.k8s.io/kubectl:v1.30.0
+      command: ["kubectl"]
+      args: ["auth", "can-i", "list", "pods", "--namespace=ops"]

@@ -1,4 +1,4 @@
-# TEST YOURSELF: Define Resource Requirements
+# TEST YOURSELF: Create and Consume Secrets
 
 ## Scenario
 

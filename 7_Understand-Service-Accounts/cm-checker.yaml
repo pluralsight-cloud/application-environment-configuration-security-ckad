@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cm-checker
+  namespace: default
+spec:
+  restartPolicy: Never                 
+  containers:
+    - name: cm-can-i
+      image: registry.k8s.io/kubectl:v1.30.0
+      command: ["kubectl"]
+      args: ["auth", "can-i", "get", "configmap/app-config-test", "--namespace=default"]
+    - name: secret-can-i
+      image: registry.k8s.io/kubectl:v1.30.0
+      command: ["kubectl"]
+      args: ["auth", "can-i", "get", "secret/db-creds", "--namespace=default"]
