@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-pod
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ["sh", "-c"]
+    # Print secret values to logs
+    args:
+      - |
+        echo "Database Username: $username" &&
+        echo "Database Password: $password" &&
+        sleep 3600
