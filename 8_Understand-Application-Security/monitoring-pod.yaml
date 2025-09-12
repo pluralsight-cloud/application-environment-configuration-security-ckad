@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: monitoring-pod
+spec:
+  restartPolicy: Never
+  containers:
+  - name: sidecar
+    image: busybox:1.36
+    command: ["sh","-c"]
+    args:
+      - "echo 'UID:' $(id -u);
+         echo 'Trying ping (should fail due to dropped NET_RAW)...';
+         ping -c1 127.0.0.1 || { echo 'ping failed as expected'; sleep 3600; }"
+  - name: logger
+    image: busybox:1.36
+    command: ["sh","-c"]
+    args:
+      - "set -eu;
+         echo UID=$(id -u);
+         echo GID=$(id -g);
+         sleep 3600"

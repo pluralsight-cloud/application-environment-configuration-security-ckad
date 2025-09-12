@@ -1,0 +1,48 @@
+{
+  "kind": "Event",
+  "apiVersion": "audit.k8s.io/v1",
+  "level": "RequestResponse",
+  "auditID": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+  "stage": "ResponseComplete",
+  "requestURI": "/api/v1/namespaces/production-test/pods",
+  "verb": "create",
+  "user": {
+    "username": "kubectl-admin",
+    "groups": ["system:masters", "system:authenticated"]
+  },
+  "sourceIPs": ["192.168.1.50"],
+  "objectRef": {
+    "resource": "pods",
+    "namespace": "production-test",
+    "name": "restricted-violations-abcde",
+    "apiVersion": "v1"
+  },
+  "responseStatus": {
+    "metadata": {},
+    "code": 201
+  },
+  "annotations": {
+    "pod-security.kubernetes.io/audit": "restricted:latest",
+    "pod-security.kubernetes.io/audit-violations": 
+      "hostPID != false; runAsNonRoot != true (container \"bad-busybox\" must not run as root); " +
+      "allowPrivilegeEscalation != false (container \"bad-busybox\"); " +
+      "unrestricted capabilities added (container \"bad-busybox\"); " +
+      "hostPath volumes (volumes \"host-vol\")"
+  },
+  "requestObject": {
+    "kind": "Pod",
+    "metadata": {
+      "name": "restricted-violations-abcde",
+      "namespace": "production-test"
+    },
+    "spec": {
+      "hostPID": true,
+      "containers": [
+        {
+          "name": "bad-busybox",
+          "image": "busybox:1.36"
+        }
+      ]
+    }
+  }
+}
