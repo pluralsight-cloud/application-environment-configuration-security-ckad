@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-two-pod
+  namespace: staging-test
+spec:
+  containers:
+  - name: app-two
+    image: busybox:1.36
+    command: ["sh","-c"]
+    args:
+      - |
+        echo "UID: $(id -u) GID: $(id -g)";
+        echo "Sleeping...";
+        sleep 3600

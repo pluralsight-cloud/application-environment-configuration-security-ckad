@@ -14,7 +14,7 @@ Set up the PodSecurityAdmission on the `staging-test` namespace so that it is en
 
 Attempt to run the `app-one-pod`. Update the manifest so it does not violate any enforced pod security options.
 
-Update the `app-two-pod` to disaple privilege escalation for its container and use the `NET_RAW` Linux capability. Run the pod, noting the warnings. Copy the manifest to a new file `app-two-restricted` and resolve the issues in the deployment for restricted environments.
+Update the `app-two-pod` to disable privilege escalation for its container and use the seccomp profile `RuntimeDefault`. Run the pod, noting the warnings. Copy the manifest to a new file `app-two-restricted` and resolve the issues in the deployment for restricted environments.
 
 ## Solution
 
